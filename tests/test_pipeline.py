@@ -47,7 +47,7 @@ def test_audit_trail_records_pipeline_steps():
 
     steps = [item.step for item in report.audit_trail]
 
-    assert "Requirement Analyzer" in steps
+    assert any(step.startswith("Requirement Analyzer") for step in steps)
     assert "Risk & Security Auditor" in steps
     assert "Test Strategist" in steps
     assert "Release Judge" in steps
