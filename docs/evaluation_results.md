@@ -23,12 +23,12 @@ Each requirement includes expected gaps, expected risks, expected severity, and 
 
 ## Current MVP Results
 
-| Metric | Result |
-|---|---:|
-| Dataset size | 10 requirements |
-| Verdict accuracy | 90.00% |
-| Average gap recall | 90.00% |
-| Average risk recall | 96.67% |
+| Metric | ReleaseGuard Pipeline | Single-Step Baseline |
+|---|---:|---:|
+| Dataset size | 10 requirements | 10 requirements |
+| Verdict accuracy | 90.00% | 40.00% |
+| Average gap recall | 90.00% | 33.33% |
+| Average risk recall | 96.67% | 31.67% |
 
 ---
 
@@ -36,7 +36,7 @@ Each requirement includes expected gaps, expected risks, expected severity, and 
 
 ### Verdict Accuracy
 
-Measures whether ReleaseGuard's final release decision matches the expected labeled verdict.
+Measures whether the final release decision matches the expected labeled verdict.
 
 Example verdicts:
 
@@ -61,9 +61,31 @@ Measures whether ReleaseGuard detects expected product, security, privacy, compl
 
 ---
 
+## Baseline Comparison
+
+The MVP compares ReleaseGuard's structured multi-step pipeline against a simplified single-step baseline.
+
+The baseline performs a direct one-pass requirement review without the specialized ReleaseGuard stages.
+
+ReleaseGuard performs better because it separates the quality review into focused steps:
+
+1. Requirement analysis
+2. Risk and security review
+3. Test strategy generation
+4. Release judgment
+5. Deterministic scoring
+
+This comparison helps demonstrate that the architecture is not just more complex, but measurably more effective on the labeled dataset.
+
+---
+
 ## Key Finding
 
-The MVP demonstrates that a structured multi-step release readiness pipeline can detect meaningful requirement gaps and product risks before implementation begins.
+The ReleaseGuard pipeline significantly outperformed the single-step baseline:
+
+- +50 percentage points in verdict accuracy
+- +56.67 percentage points in average gap recall
+- +65 percentage points in average risk recall
 
 The strongest detection areas are:
 
@@ -81,6 +103,8 @@ The strongest detection areas are:
 The current MVP uses deterministic rule-based agent logic.
 
 Future versions will replace or augment these rules with LLM-powered agents using Google ADK while preserving structured schemas, deterministic scoring, and reproducible evaluation.
+
+The current baseline is a simplified single-step baseline, not a live LLM baseline.
 
 ---
 

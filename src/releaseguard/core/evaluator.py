@@ -3,6 +3,7 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
+from releaseguard.core.baseline import run_single_prompt_baseline
 from releaseguard.core.orchestrator import run_pipeline
 
 
@@ -18,6 +19,12 @@ def _keyword_hit(expected: str, actual_text: str) -> bool:
     return any(token in actual_text for token in tokens)
 
 
+def _recall(expected_items: list[str], actual_text: str) -> tuple[float, list[str]]:
+    hits = [expected for expected in expected_items if _keyword_hit(expected, actual_text)]
+    recall = len(hits) / len(expected_items) if expected_items else 1.0
+    return recall, hits
+
+
 def evaluate_dataset(
     dataset_path: Path = Path("data/evaluations/requirements.json"),
     output_path: Path = Path("output/evaluations/eval_report.md"),
@@ -27,68 +34,95 @@ def evaluate_dataset(
     results = []
 
     for item in dataset:
-        report = run_pipeline(item["requirement"])
+        releaseguard_report = run_pipeline(item["requirement"])
+        baseline_result = run_single_prompt_baseline(item["requirement"])
 
-        actual_verdict = report.release_decision.verdict.value
         expected_verdict = item["expected_verdict"]
-
-        gap_text = _text_blob(
-            [gap.title + " " + gap.description for gap in report.requirement_analysis.gaps]
-        )
-        risk_text = _text_blob(
-            [
-                finding.title + " " + finding.description + " " + finding.category
-                for finding in report.risk_security_analysis.findings
-            ]
-        )
-
         expected_gaps = item.get("expected_gaps", [])
         expected_risks = item.get("expected_risks", [])
 
-        gap_hits = [
-            expected_gap
-            for expected_gap in expected_gaps
-            if _keyword_hit(expected_gap, gap_text)
-        ]
+        releaseguard_gap_text = _text_blob(
+            [
+                gap.title + " " + gap.description
+                for gap in releaseguard_report.requirement_analysis.gaps
+            ]
+        )
+        releaseguard_risk_text = _text_blob(
+            [
+                finding.title + " " + finding.description + " " + finding.category
+                for finding in releaseguard_report.risk_security_analysis.findings
+            ]
+        )
 
-        risk_hits = [
-            expected_risk
-            for expected_risk in expected_risks
-            if _keyword_hit(expected_risk, risk_text)
-        ]
+        baseline_gap_text = _text_blob(baseline_result.gaps)
+        baseline_risk_text = _text_blob(baseline_result.risks)
 
-        gap_recall = len(gap_hits) / len(expected_gaps) if expected_gaps else 1.0
-        risk_recall = len(risk_hits) / len(expected_risks) if expected_risks else 1.0
-        verdict_match = actual_verdict == expected_verdict
+        releaseguard_gap_recall, releaseguard_gap_hits = _recall(
+            expected_gaps,
+            releaseguard_gap_text,
+        )
+        releaseguard_risk_recall, releaseguard_risk_hits = _recall(
+            expected_risks,
+            releaseguard_risk_text,
+        )
+
+        baseline_gap_recall, baseline_gap_hits = _recall(
+            expected_gaps,
+            baseline_gap_text,
+        )
+        baseline_risk_recall, baseline_risk_hits = _recall(
+            expected_risks,
+            baseline_risk_text,
+        )
 
         results.append(
             {
                 "id": item["id"],
                 "title": item["title"],
                 "expected_verdict": expected_verdict,
-                "actual_verdict": actual_verdict,
-                "readiness_score": report.release_decision.readiness_score,
-                "gap_recall": gap_recall,
-                "risk_recall": risk_recall,
-                "verdict_match": verdict_match,
-                "gap_hits": gap_hits,
-                "risk_hits": risk_hits,
+                "releaseguard_verdict": releaseguard_report.release_decision.verdict.value,
+                "baseline_verdict": baseline_result.verdict,
+                "releaseguard_score": releaseguard_report.release_decision.readiness_score,
+                "baseline_score": baseline_result.readiness_score,
+                "releaseguard_verdict_match": (
+                    releaseguard_report.release_decision.verdict.value == expected_verdict
+                ),
+                "baseline_verdict_match": baseline_result.verdict == expected_verdict,
+                "releaseguard_gap_recall": releaseguard_gap_recall,
+                "baseline_gap_recall": baseline_gap_recall,
+                "releaseguard_risk_recall": releaseguard_risk_recall,
+                "baseline_risk_recall": baseline_risk_recall,
+                "releaseguard_gap_hits": releaseguard_gap_hits,
+                "baseline_gap_hits": baseline_gap_hits,
+                "releaseguard_risk_hits": releaseguard_risk_hits,
+                "baseline_risk_hits": baseline_risk_hits,
             }
         )
 
-    verdict_accuracy = mean(1 if result["verdict_match"] else 0 for result in results)
-    avg_gap_recall = mean(result["gap_recall"] for result in results)
-    avg_risk_recall = mean(result["risk_recall"] for result in results)
+    releaseguard_verdict_accuracy = mean(
+        1 if result["releaseguard_verdict_match"] else 0 for result in results
+    )
+    baseline_verdict_accuracy = mean(
+        1 if result["baseline_verdict_match"] else 0 for result in results
+    )
+
+    releaseguard_avg_gap_recall = mean(result["releaseguard_gap_recall"] for result in results)
+    baseline_avg_gap_recall = mean(result["baseline_gap_recall"] for result in results)
+
+    releaseguard_avg_risk_recall = mean(result["releaseguard_risk_recall"] for result in results)
+    baseline_avg_risk_recall = mean(result["baseline_risk_recall"] for result in results)
 
     lines = [
         "# ReleaseGuard Evaluation Report",
         "",
         "## Summary Metrics",
         "",
-        f"- Dataset size: {len(results)} requirements",
-        f"- Verdict accuracy: {verdict_accuracy:.2%}",
-        f"- Average gap recall: {avg_gap_recall:.2%}",
-        f"- Average risk recall: {avg_risk_recall:.2%}",
+        "| Metric | ReleaseGuard Pipeline | Single-Prompt Baseline |",
+        "|---|---:|---:|",
+        f"| Dataset size | {len(results)} requirements | {len(results)} requirements |",
+        f"| Verdict accuracy | {releaseguard_verdict_accuracy:.2%} | {baseline_verdict_accuracy:.2%} |",
+        f"| Average gap recall | {releaseguard_avg_gap_recall:.2%} | {baseline_avg_gap_recall:.2%} |",
+        f"| Average risk recall | {releaseguard_avg_risk_recall:.2%} | {baseline_avg_risk_recall:.2%} |",
         "",
         "## Requirement-Level Results",
         "",
@@ -100,13 +134,40 @@ def evaluate_dataset(
                 f"### {result['id']} — {result['title']}",
                 "",
                 f"- Expected verdict: {result['expected_verdict']}",
-                f"- Actual verdict: {result['actual_verdict']}",
-                f"- Readiness score: {result['readiness_score']}/100",
-                f"- Verdict match: {result['verdict_match']}",
-                f"- Gap recall: {result['gap_recall']:.2%}",
-                f"- Risk recall: {result['risk_recall']:.2%}",
-                f"- Gap hits: {', '.join(result['gap_hits']) if result['gap_hits'] else 'None'}",
-                f"- Risk hits: {', '.join(result['risk_hits']) if result['risk_hits'] else 'None'}",
+                f"- ReleaseGuard verdict: {result['releaseguard_verdict']}",
+                f"- Baseline verdict: {result['baseline_verdict']}",
+                f"- ReleaseGuard score: {result['releaseguard_score']}/100",
+                f"- Baseline score: {result['baseline_score']}/100",
+                f"- ReleaseGuard verdict match: {result['releaseguard_verdict_match']}",
+                f"- Baseline verdict match: {result['baseline_verdict_match']}",
+                f"- ReleaseGuard gap recall: {result['releaseguard_gap_recall']:.2%}",
+                f"- Baseline gap recall: {result['baseline_gap_recall']:.2%}",
+                f"- ReleaseGuard risk recall: {result['releaseguard_risk_recall']:.2%}",
+                f"- Baseline risk recall: {result['baseline_risk_recall']:.2%}",
+                "- ReleaseGuard gap hits: "
+                + (
+                    ", ".join(result["releaseguard_gap_hits"])
+                    if result["releaseguard_gap_hits"]
+                    else "None"
+                ),
+                "- Baseline gap hits: "
+                + (
+                    ", ".join(result["baseline_gap_hits"])
+                    if result["baseline_gap_hits"]
+                    else "None"
+                ),
+                "- ReleaseGuard risk hits: "
+                + (
+                    ", ".join(result["releaseguard_risk_hits"])
+                    if result["releaseguard_risk_hits"]
+                    else "None"
+                ),
+                "- Baseline risk hits: "
+                + (
+                    ", ".join(result["baseline_risk_hits"])
+                    if result["baseline_risk_hits"]
+                    else "None"
+                ),
                 "",
             ]
         )
