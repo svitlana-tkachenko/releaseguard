@@ -144,12 +144,14 @@ ReleaseGuard generates a Markdown report with:
 
 ReleaseGuard was evaluated against a labeled dataset of 10 software requirements.
 
-| Metric              |          Result |
-| ------------------- | --------------: |
-| Dataset size        | 10 requirements |
-| Verdict accuracy    |          90.00% |
-| Average gap recall  |          90.00% |
-| Average risk recall |          96.67% |
+| Metric | ReleaseGuard Pipeline | Single-Step Baseline |
+|---|---:|---:|
+| Dataset size | 10 requirements | 10 requirements |
+| Verdict accuracy | 90.00% | 40.00% |
+| Average gap recall | 90.00% | 33.33% |
+| Average risk recall | 96.67% | 31.67% |
+
+ReleaseGuard's structured multi-step pipeline significantly outperformed the simplified single-step baseline.
 
 The dataset includes requirements across multiple product areas:
 
