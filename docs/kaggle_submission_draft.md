@@ -294,7 +294,7 @@ tests/
 
 Current MVP limitations:
 
-* deterministic rule-based agents
+* Requirement Analyzer is optionally Gemini-powered; other agents remain rule-based
 * no live Google ADK integration yet
 * no web UI
 * no cloud deployment

@@ -263,7 +263,7 @@ ReleaseGuard demonstrates several concepts from the Google AI Agents course:
 
 Current MVP limitations:
 
-* Agents are deterministic and rule-based
+* Requirement Analyzer is optionally Gemini-powered; Risk Auditor, Test Strategist, and Release Judge remain rule-based
 * No live Google ADK integration yet
 * No web UI
 * No cloud deployment

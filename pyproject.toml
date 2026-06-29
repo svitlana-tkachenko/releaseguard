@@ -1,6 +1,6 @@
 [project]
 name = "releaseguard"
-version = "0.1.0"
+version = "0.2.3"
 description = "Multi-agent release readiness platform for evaluating software requirements before development."
 readme = "README.md"
 requires-python = ">=3.11"
