@@ -1,0 +1,96 @@
+# ReleaseGuard Report
+
+## Verdict
+
+**{{ report.release_decision.verdict.value }}**
+
+**Readiness Score:** {{ report.release_decision.readiness_score }}/100
+
+**Manual Review Required:** {{ report.release_decision.manual_review_required }}
+
+---
+
+## Input Requirement
+
+{{ report.requirement.text }}
+
+---
+
+## Feature Summary
+
+{{ report.requirement_analysis.feature_summary }}
+
+---
+
+## Requirement Gaps
+
+{% for gap in report.requirement_analysis.gaps %}
+- **{{ gap.severity.value }}** — {{ gap.title }}  
+  {{ gap.description }}
+{% endfor %}
+
+---
+
+## Flagged Assumptions
+
+{% for assumption in report.requirement_analysis.assumptions %}
+- **{{ assumption.severity.value }}** — {{ assumption.description }}  
+  Risk if wrong: {{ assumption.risk_if_wrong }}
+{% endfor %}
+
+---
+
+## Risk & Security Findings
+
+{% for finding in report.risk_security_analysis.findings %}
+- **{{ finding.severity.value }} / {{ finding.category }}** — {{ finding.title }}  
+  {{ finding.description }}
+{% endfor %}
+
+---
+
+## Recommended Mitigations
+
+{% for mitigation in report.risk_security_analysis.recommended_mitigations %}
+- {{ mitigation }}
+{% endfor %}
+
+---
+
+## Test Strategy
+
+{% for test in report.test_strategy.test_cases %}
+- **{{ test.priority }} / {{ test.test_type }}** — {{ test.title }}  
+  {{ test.description }}
+{% endfor %}
+
+---
+
+## Coverage Notes
+
+{% for note in report.test_strategy.coverage_notes %}
+- {{ note }}
+{% endfor %}
+
+---
+
+## Category Scores
+
+- Requirement Quality: {{ report.release_decision.category_scores.requirement_quality }}/100
+- Risk & Security: {{ report.release_decision.category_scores.risk_security }}/100
+- Test Coverage: {{ report.release_decision.category_scores.test_coverage }}/100
+- Release Confidence: {{ report.release_decision.category_scores.release_confidence }}/100
+
+---
+
+## Decision Rationale
+
+{{ report.release_decision.rationale }}
+
+---
+
+## Audit Trail
+
+{% for item in report.audit_trail %}
+- **{{ item.step }}:** {{ item.summary }}
+{% endfor %}
