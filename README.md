@@ -67,7 +67,7 @@ It includes:
 * Automated tests
 * Measured evaluation results
 
-The current version uses deterministic rule-based agent logic. Future versions can replace or augment these agents with LLM-powered Google ADK agents while preserving the same schemas, scoring, and evaluation framework.
+The current version includes an optional Gemini-powered Requirement Analyzer when GOOGLE_API_KEY is configured, with deterministic rule-based fallback for local reproducibility, tests, and evaluation. Future versions can expand this into a fuller Google ADK-powered multi-agent workflow while preserving the same schemas, scoring, guardrails, and evaluation framework.
 
 ---
 

@@ -159,7 +159,7 @@ ReleaseGuard demonstrates several concepts from the Google AI Agents course:
 * local CLI execution
 * reproducible reports
 
-The current MVP uses local deterministic logic instead of live LLM calls so that outputs can be tested, evaluated, and reproduced consistently.
+The current MVP includes an optional Gemini-powered Requirement Analyzer when GOOGLE_API_KEY is configured, while preserving deterministic rule-based fallback so outputs can still be tested, evaluated, and reproduced consistently.
 
 Future versions can replace or augment the deterministic agents with Google ADK-powered LLM agents while preserving the same schemas, scoring logic, guardrails, and evaluation framework.
 

@@ -96,7 +96,7 @@ This project demonstrates several AI agent concepts.
 
 It uses specialized agent roles, structured orchestration, security-aware input guardrails, evaluation metrics, baseline comparison, and reproducible local execution.
 
-The current MVP uses deterministic rule-based agents so the behavior is testable and measurable.
+The current MVP includes an optional Gemini-powered Requirement Analyzer and deterministic rule-based fallback, so the behavior remains testable and measurable even without an API key.
 
 A future version can replace or augment the deterministic agents with Google ADK-powered LLM agents while keeping the same schemas, scoring logic, guardrails, and evaluation framework.
 
