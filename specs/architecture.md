@@ -251,3 +251,19 @@ Requirement
 
 This makes ReleaseGuard an AI-native quality gate for modern software teams.
 
+
+## Security Guardrails
+
+Before the requirement enters the main analysis pipeline, ReleaseGuard runs input guardrails.
+
+The guardrail layer checks for:
+
+- excessive input length
+- prompt injection patterns
+- potential PII such as email, phone number, SSN, or credit-card-like data
+
+Guardrail results are added to the audit trail.
+
+If suspicious input is detected, ReleaseGuard still allows analysis to continue but adds security or privacy findings to the final report.
+
+If the input exceeds the maximum allowed length, the pipeline blocks execution.

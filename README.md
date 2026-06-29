@@ -298,3 +298,19 @@ ReleaseGuard is currently an MVP built for the Kaggle AI Agents Capstone.
 
 It is designed as a portfolio project for AI Quality Engineering, AI Evaluation Engineering, and modern software QA workflows.
 
+
+---
+
+## Security Guardrails
+
+ReleaseGuard includes lightweight input guardrails for safer agent-style evaluation.
+
+Current guardrails include:
+
+- input length limit
+- prompt injection pattern detection
+- PII pattern detection
+- audit trail integration
+- additional security/privacy findings when suspicious input is detected
+
+These checks help prevent the pipeline from blindly trusting user-provided requirement text.
