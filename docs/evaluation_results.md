@@ -100,11 +100,11 @@ The strongest detection areas are:
 
 ## Known Limitation
 
-The current MVP uses deterministic rule-based agent logic.
+The Requirement Analyzer can use Gemini Flash when GOOGLE_API_KEY is configured.
 
-Future versions will replace or augment these rules with LLM-powered agents using Google ADK while preserving structured schemas, deterministic scoring, and reproducible evaluation.
+The Risk Auditor, Test Strategist, and Release Judge remain rule-based to preserve reproducible, testable evaluation. The evaluation dataset runs in rule-based mode so results remain deterministic and reproducible without an API key.
 
-The current baseline is a simplified single-step baseline, not a live LLM baseline.
+The current baseline is a simplified single-step rule system, not a live LLM baseline.
 
 ---
 

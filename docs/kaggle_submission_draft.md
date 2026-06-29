@@ -55,7 +55,7 @@ ReleaseGuard addresses this problem by evaluating the requirement itself before 
 
 ReleaseGuard uses a structured multi-step pipeline to evaluate requirements.
 
-The current MVP runs locally from the command line and uses deterministic, rule-based agent logic to make the evaluation reproducible and measurable.
+The current MVP runs locally from the command line. The Requirement Analyzer can use Gemini Flash when GOOGLE_API_KEY is configured, while the rule-based fallback keeps evaluation reproducible and measurable without an API key.
 
 Pipeline:
 

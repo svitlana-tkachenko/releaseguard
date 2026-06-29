@@ -32,7 +32,7 @@ Return ONLY valid JSON matching this exact schema:
     }
   ],
   "ambiguity_notes": ["specific ambiguity or missing detail"],
-  "clarity_score": 0
+  "clarity_score": 75
 }
 
 Scoring guidance:
@@ -83,8 +83,9 @@ def analyze_requirement_with_llm(requirement: RequirementInput) -> RequirementAn
 
     response = client.models.generate_content(
         model=model_name,
-        contents=f"{SYSTEM_PROMPT}\n\nRequirement:\n{requirement.text}",
+        contents=requirement.text,
         config=types.GenerateContentConfig(
+            system_instruction=SYSTEM_PROMPT,
             response_mime_type="application/json",
             temperature=0.2,
         ),
