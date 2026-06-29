@@ -314,3 +314,16 @@ Current guardrails include:
 - additional security/privacy findings when suspicious input is detected
 
 These checks help prevent the pipeline from blindly trusting user-provided requirement text.
+
+
+---
+
+## Demo
+
+The repository includes a sample requirement and a generated ReleaseGuard report.
+
+Demo input: `data/samples/account_deletion.md`
+
+Generated report: `docs/demo/account_deletion_report.md`
+
+This demo shows how ReleaseGuard evaluates a privacy-sensitive account deletion feature and produces a structured release readiness report with gaps, risks, test ideas, readiness score, verdict, and audit trail.
