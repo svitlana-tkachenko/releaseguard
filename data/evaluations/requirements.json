@@ -1,0 +1,92 @@
+[
+  {
+    "id": "REQ-001",
+    "title": "Account deletion",
+    "requirement": "As a user, I want to delete my account permanently from the settings page.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["privacy", "compliance", "data retention"],
+    "expected_gaps": ["acceptance criteria", "failure behavior", "account deletion policy"],
+    "severity": "CRITICAL"
+  },
+  {
+    "id": "REQ-002",
+    "title": "Password reset",
+    "requirement": "As a user, I want to reset my password using email verification.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["security", "authentication abuse", "token expiration"],
+    "expected_gaps": ["rate limiting", "expired link behavior", "invalid email flow"],
+    "severity": "HIGH"
+  },
+  {
+    "id": "REQ-003",
+    "title": "Profile name update",
+    "requirement": "As a user, I want to update my profile name from account settings.",
+    "expected_verdict": "MANUAL_REVIEW",
+    "expected_risks": ["input validation", "display consistency"],
+    "expected_gaps": ["acceptance criteria", "invalid input behavior"],
+    "severity": "MEDIUM"
+  },
+  {
+    "id": "REQ-004",
+    "title": "Checkout discount code",
+    "requirement": "As a user, I want to apply a discount code during checkout before payment is processed.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["payment integrity", "duplicate charges", "rollback behavior"],
+    "expected_gaps": ["failed payment behavior", "invalid discount code", "transaction rollback"],
+    "severity": "CRITICAL"
+  },
+  {
+    "id": "REQ-005",
+    "title": "OAuth login",
+    "requirement": "As a user, I want to sign in with Google OAuth.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["authentication", "token handling", "denied permissions"],
+    "expected_gaps": ["failed OAuth flow", "account linking", "session expiration"],
+    "severity": "HIGH"
+  },
+  {
+    "id": "REQ-006",
+    "title": "Newsletter signup",
+    "requirement": "As a visitor, I want to subscribe to the newsletter with my email address.",
+    "expected_verdict": "MANUAL_REVIEW",
+    "expected_risks": ["PII", "email validation", "consent"],
+    "expected_gaps": ["invalid email behavior", "unsubscribe expectation", "privacy consent"],
+    "severity": "MEDIUM"
+  },
+  {
+    "id": "REQ-007",
+    "title": "Avatar upload",
+    "requirement": "As a user, I want to upload a profile avatar image.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["file upload security", "malware", "content validation"],
+    "expected_gaps": ["file size limits", "allowed formats", "unsafe file handling"],
+    "severity": "HIGH"
+  },
+  {
+    "id": "REQ-008",
+    "title": "Admin user search",
+    "requirement": "As an admin, I want to search users by email in the admin dashboard.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["authorization", "PII exposure", "access control"],
+    "expected_gaps": ["role permissions", "audit logging", "empty/no-result states"],
+    "severity": "HIGH"
+  },
+  {
+    "id": "REQ-009",
+    "title": "Dark mode toggle",
+    "requirement": "As a user, I want to switch the app between light mode and dark mode.",
+    "expected_verdict": "SHIP_WITH_CAUTION",
+    "expected_risks": ["accessibility", "visual regression"],
+    "expected_gaps": ["contrast requirements", "persistence behavior", "system setting behavior"],
+    "severity": "LOW"
+  },
+  {
+    "id": "REQ-010",
+    "title": "Export user data",
+    "requirement": "As a user, I want to export a copy of my personal data from account settings.",
+    "expected_verdict": "NO_SHIP",
+    "expected_risks": ["privacy", "data access control", "compliance"],
+    "expected_gaps": ["identity verification", "export format", "download expiration"],
+    "severity": "CRITICAL"
+  }
+]
